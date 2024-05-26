@@ -21,7 +21,6 @@ public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private long id;
     private String username;
     private String email;
@@ -36,9 +35,11 @@ public class Users {
         inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     Set<Board> boardsAuthor = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "guess", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     Set<Board> boardsGuess = new HashSet<>();
 }

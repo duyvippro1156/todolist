@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.JWTAuthResponse;
 import com.example.demo.dto.SignInDto;
 import com.example.demo.dto.SignUpDto;
+import com.example.demo.model.Users;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthService;
 
@@ -34,10 +35,11 @@ public class AuthController {
     public ResponseEntity<JWTAuthResponse> authenticate(@RequestBody SignInDto signinDto){
         try {
             String token = authService.login(signinDto);
-
+            Users users = userRepository.findByUsernameOrEmail(signinDto.getUsernameOrEmail(), signinDto.getUsernameOrEmail()).orElseThrow();
             JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
             jwtAuthResponse.setAccessToken(token);
-    
+            jwtAuthResponse.setUsername(users.getUsername());
+            jwtAuthResponse.setId(users.getId());
             return ResponseEntity.ok(jwtAuthResponse);           
              
         } catch (BadCredentialsException ex) {
