@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import com.example.demo.model.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -34,13 +35,13 @@ public class WebSocketController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDateTime = now.format(formatter);
 
-//        TaskList tasks = tasksRepository.findByTargetDate(formattedDateTime);
-//        if (tasks != null) {
-////            String message = tasks.getTask_name() + " has time out!";
-//            messagingTemplate.convertAndSend("/topic/tasks", "0");
-//        } else {
-//            String message = "Test notification";
-//            messagingTemplate.convertAndSend("/topic/tasks", message);
-//        }
+        Task tasks = tasksRepository.findByTargetDate(formattedDateTime);
+        if (tasks != null) {
+            String message = tasks.getName() + " has time out!";
+            messagingTemplate.convertAndSend("/topic/tasks", message);
+        } else {
+            String message = "Test notification";
+            messagingTemplate.convertAndSend("/topic/tasks", message);
+        }
     }
 }

@@ -50,12 +50,7 @@ public class TaskListServiceImpl implements TaskListService {
 
     @Override
     public void deleteTaskListWithId(Long boardId, Long id) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() ->
-                new UsernameNotFoundException("not found "));
-        TaskList taskList = taskListRepository.findById(id).orElseThrow(() ->
-                new UsernameNotFoundException("not found "));
-        System.out.println(board.getTasksList().equals(taskList));
-        if(board.getTasksList().equals(taskList) && checkAuthor(boardId)){
+        if(checkAuthor(boardId)){
             taskListRepository.deleteById(id);
         };
     }
@@ -77,6 +72,11 @@ public class TaskListServiceImpl implements TaskListService {
     @Override
     public void moveTaskListWithId(Long boardId, Long id) {
 
+    }
+
+    @Override
+    public List<TaskList> searchByListName(Long boardId, String keyWord) {
+        return taskListRepository.searchByListName(boardId, keyWord);
     }
 
     public boolean checkAuthor(Long boardId) {

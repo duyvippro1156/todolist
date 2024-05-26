@@ -41,6 +41,7 @@ public class Task {
     @OneToMany(mappedBy = "task", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     Set<Comment> comments;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "list_id", referencedColumnName = "id")
     TaskList taskList;

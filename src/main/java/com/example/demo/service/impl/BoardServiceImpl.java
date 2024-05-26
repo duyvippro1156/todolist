@@ -2,7 +2,6 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dto.BoardDto;
 import com.example.demo.model.Board;
-import com.example.demo.model.Task;
 import com.example.demo.model.Users;
 import com.example.demo.repository.BoardRepository;
 import com.example.demo.repository.UserRepository;

@@ -12,4 +12,5 @@ public interface TaskListService {
     public void deleteTaskListWithId(Long boardId, Long id);
     public TaskList editTaskListWithId(TaskListDto taskListDto, Long boardId, Long id);
     public void moveTaskListWithId(Long boardId, Long id);
+    public List<TaskList> searchByListName(Long boardId, String keyWord);
 }

@@ -13,21 +13,19 @@ import java.util.List;
 
 @Repository
 public interface TasksRepository extends JpaRepository<Task, Long> {
-	List<Task> findAll();
-	Task getById(Long id);
+	@Query(value = "SELECT t1.* FROM `task` t1 WHERE t1.list_id=?1 AND t1.name like %?2%", nativeQuery = true)
+	List<Task> searchByTaskname(Long id, String keyWord);
 
-	@Query(value = "SELECT t1.* FROM `tasks` t1 WHERE t1.task_name like %?1%", nativeQuery = true)
-	List<Task> searchByTaskname(String keyWord);
+	@Query(value = "SELECT t1.* FROM `task` t1 WHERE t1.list_id=?1 AND t1.is_delete=0", nativeQuery = true)
+	List<Task> getAllTaskByTaskListId(Long listId);
 
 	@Modifying
 	@Transactional
-	@Query(value = "UPDATE tasks t1 SET t1.is_delete = 1 WHERE t1.id = ?1", nativeQuery = true)
+	@Query(value = "UPDATE task t1 SET t1.is_delete = 1 WHERE t1.id = ?1", nativeQuery = true)
 	void softDelete (Long id);
 
-	@Query(value = "SELECT t1.* FROM tasks t1 WHERE t1.is_delete = 0", nativeQuery = true)
-	List<Task> findAllWithoutDeleted();
-
-	Task findTaskByTaskList_Id(Long taskListId);
+	@Query(value = "SELECT t1.* FROM `task` t1 WHERE t1.target_date like %?1%", nativeQuery = true)
+	Task findByTargetDate(String targetDate);
 
 } 
 

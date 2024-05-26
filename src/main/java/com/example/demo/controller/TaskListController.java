@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.TaskListDto;
-import com.example.demo.model.Board;
 import com.example.demo.model.TaskList;
 import com.example.demo.service.TaskListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +44,16 @@ public class TaskListController {
             return ResponseEntity.ok(true);
         }else {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/{boardId}/columns/search")
+    public ResponseEntity<List<TaskList>> seachByTaskName(@PathVariable Long boardId, @RequestParam String keyWord) {
+        List<TaskList> listTasks = taskListService.searchByListName(boardId, keyWord);
+        if (listTasks.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(listTasks, HttpStatus.OK);
         }
     }
 

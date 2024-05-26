@@ -19,30 +19,21 @@ import java.util.List;
 @RequestMapping("/api/boards")
 @CrossOrigin(origins = "*")
 public class TasksController {
-  /*
-  .delete('/:boardId/columns/:columnId/tasks/:taskId', deleteTaskWithId)
-  .post('/:boardId/columns/:columnId/tasks/:taskId/move/:toColumnId/index/:destinationIndex', moveTaskWithId)
-  .post('/:boardId/columns/:columnId/index/:destinationIndex', moveColumnWithId);
-   */
+
     @Autowired
     private TasksService tasksService;
 
-//    @GetMapping("/")
-//    public ResponseEntity<List<Task>> getAllTasks() {
-//        return ResponseEntity.ok(tasksService.getAllTask());
-//    }
-
     @GetMapping("/{boardId}/columns/{listId}/tasks")
-    public ResponseEntity<Task> getTask(@PathVariable Long boardId, @PathVariable Long listId) {
-        Task tasks = tasksService.findTaskByListId(listId);
+    public ResponseEntity<List<Task>> getTask(@PathVariable Long boardId, @PathVariable Long listId) {
+        List<Task> tasks = tasksService.findTaskByListId(listId);
         if (tasks == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(tasks, HttpStatus.OK);
+            return new ResponseEntity<List<Task>>(tasks, HttpStatus.OK);
         }   
     } 
 
-    @PostMapping("/:boardId/columns/:taskListId/tasks")
+    @PostMapping("/{boardId}/columns/{taskListId}/tasks")
     public ResponseEntity<Task> createTask(@RequestBody TasksDto task, @PathVariable Long boardId, @PathVariable Long taskListId) {
         return new ResponseEntity<Task>(tasksService.createNewTask(task, boardId, taskListId),HttpStatus.CREATED);
     } 
@@ -52,8 +43,7 @@ public class TasksController {
         if (tasksService.checkAuthor(id)){
             return new ResponseEntity<Task>(tasksService.updateTask(task, boardId, listId, id), HttpStatus.OK);
         }else {
-//            return new ResponseEntity<TaskList>(tasksService.findTaskById(id), HttpStatus.BAD_REQUEST);
-            return null;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     } 
     @DeleteMapping("/{boardId}/columns/{listId}/tasks/{id}")
@@ -66,13 +56,13 @@ public class TasksController {
         }
     } 
 
-    @PostMapping("/search") 
-    public ResponseEntity<List<Task>> seachByTaskName(@RequestParam String keyWord) {
-        List<Task> listtTasks = tasksService.searchByTaskName(keyWord);
-        if (listtTasks.isEmpty()) {
+    @PostMapping("/{boardId}/columns/{listId}/tasks/search")
+    public ResponseEntity<List<Task>> seachByTaskName(@PathVariable Long listId, @PathVariable Long boardId, @RequestParam String keyWord) {
+        List<Task> listTasks = tasksService.searchByTaskName(boardId, listId, keyWord);
+        if (listTasks.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(listtTasks, HttpStatus.OK);
+            return new ResponseEntity<>(listTasks, HttpStatus.OK);
         }
     } 
 }

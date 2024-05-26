@@ -1,11 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.TasksDto;
-import com.example.demo.model.Board;
 import com.example.demo.model.Task;
 import com.example.demo.model.TaskList;
 import com.example.demo.model.Users;
-import com.example.demo.repository.BoardRepository;
 import com.example.demo.repository.TaskListRepository;
 import com.example.demo.repository.TasksRepository;
 import com.example.demo.repository.UserRepository;
@@ -31,14 +29,8 @@ public class TasksServiceImpl implements TasksService {
 	@Autowired
 	private UserRepository userRepository;
 
-	@Autowired
-	private BoardRepository boardRepository;
-	
 	@Override
 	public Task createNewTask(TasksDto tasksDto, Long boardId, Long taskListId) {
-		Board board = boardRepository.findById(boardId).orElseThrow(() ->
-				new UsernameNotFoundException("not found  "));
-		Long board_id = board.getId();
 		TaskList taskList = taskListRepository.findById(taskListId).orElseThrow();
 		Task tasks = new Task();
 		tasks.setName(tasksDto.getName());
@@ -50,20 +42,17 @@ public class TasksServiceImpl implements TasksService {
 		tasks.setTargetDate(tasksDto.getTargetDate());
 		tasks.setIs_delete(0);
 		tasks.setTaskList(taskList);
-		if(board.getTasksList().equals(taskList) && checkAuthor(boardId)){
+		if (checkAuthor(boardId)){
 			return taskRepository.save(tasks);
+		}else {
+			return taskRepository.findById(taskListId).orElseThrow(() ->
+					new UsernameNotFoundException("not found "));
 		}
-		return tasks;
 	}
-	
+
 	@Override
-	public List<Task> getAllTask() {
-		return taskRepository.findAllWithoutDeleted(); 
-	} 
-	
-	@Override
-	public Task findTaskByListId(Long id) {
-		return taskRepository.findTaskByTaskList_Id(id);
+	public List<Task> findTaskByListId(Long id) {
+		return taskRepository.getAllTaskByTaskListId(id);
 	}
 	
 	@Override
@@ -76,11 +65,8 @@ public class TasksServiceImpl implements TasksService {
 	
 	@Override
 	public Task updateTask(TasksDto tasksDto, Long boardId, Long taskListId, Long id) {
-		Board board = boardRepository.findById(boardId).orElseThrow(() ->
-				new UsernameNotFoundException("not found  "));
-		Long board_id = board.getId();
 		TaskList taskList = taskListRepository.findById(taskListId).orElseThrow();
-		Task tasks = taskRepository.findTaskByTaskList_Id(taskListId);
+		Task tasks = taskRepository.findById(id).orElseThrow();
 		tasks.setName(tasksDto.getName());
 		tasks.setCompleted(tasksDto.getCompleted());
 		tasks.setLevel(tasksDto.getLevel());
@@ -91,7 +77,7 @@ public class TasksServiceImpl implements TasksService {
 		tasks.setIs_delete(0);
 		tasks.setTaskList(taskList);
 		tasks.setId(id);
-		if(board.getTasksList().equals(taskList) && checkAuthor(boardId)){
+		if(checkAuthor(boardId)){
 			return taskRepository.save(tasks);
 		}else {
 			return taskRepository.findById(id).orElseThrow(() ->
@@ -107,7 +93,7 @@ public class TasksServiceImpl implements TasksService {
 		Users userAuth = userRepository.findByEmail(auth.getName())
 				.orElseThrow(() ->
 						new UsernameNotFoundException("not found  "+ auth.getName()));
-		if(author.getId() == userAuth.getId() && guess.getId() == userAuth.getId()) {
+		if(author.getId() == userAuth.getId() || guess.getId() == userAuth.getId()) {
 			return true;
 		} else {
 			return false;
@@ -115,10 +101,8 @@ public class TasksServiceImpl implements TasksService {
 	}
 
 	@Override
-	public List<Task> searchByTaskName(String keyWord) {
-		return taskRepository.searchByTaskname(keyWord);
+	public List<Task> searchByTaskName(Long boardId, Long taskListId, String keyWord) {
+		return taskRepository.searchByTaskname(taskListId, keyWord);
 	} 
 
-	
-	
 } 
