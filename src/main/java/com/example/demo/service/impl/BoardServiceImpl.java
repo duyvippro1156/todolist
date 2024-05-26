@@ -30,7 +30,7 @@ public class BoardServiceImpl implements BoardService {
         Users userAuth = userRepository.findByEmail(auth.getName())
                 .orElseThrow(() ->
                         new UsernameNotFoundException("not found  "+ auth.getName()));
-        return boardRepository.getAllUserBoards(userAuth.getId());
+        return boardRepository. getAllUserBoards(userAuth.getId(), userAuth.getId());
     }
 
     @Override
