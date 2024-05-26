@@ -10,19 +10,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/board")
+@RequestMapping("/api/boards")
 @CrossOrigin(origins = "*")
 public class TaskListController {
 
     @Autowired
     private TaskListService taskListService;
 
-    @PostMapping("/{boardId}/list")
+    @PostMapping("/{boardId}/columns")
     public ResponseEntity<TaskList> createTaskList(@RequestBody TaskListDto taskListDto, @PathVariable Long boardId){
         return new ResponseEntity<TaskList>(taskListService.addTaskListToBoard(taskListDto, boardId), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{boardId}/list/{listId}")
+    @PutMapping("/{boardId}/columns/{listId}")
     public ResponseEntity<TaskList> updateTaskList(@RequestBody TaskListDto taskListDto, @PathVariable Long boardId, @PathVariable Long listId){
         if (taskListService.checkAuthor(boardId)){
             return new ResponseEntity<TaskList>(taskListService.editTaskListWithId(taskListDto,boardId,listId), HttpStatus.OK);
@@ -31,7 +31,7 @@ public class TaskListController {
         }
     }
 
-    @DeleteMapping("/{boardId}/list/{listId}")
+    @DeleteMapping("/{boardId}/columns/{listId}")
     public ResponseEntity<Boolean> deleteTaskList(@PathVariable Long boardId, @PathVariable Long listId){
         if (taskListService.checkAuthor(boardId)){
             taskListService.deleteTaskListWithId(boardId,listId);

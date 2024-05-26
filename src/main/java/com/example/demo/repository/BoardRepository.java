@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-    @Query(value = "SELECT b1.* FROM board b1 WHERE b1.author_id=? OR b1.guess_id=? AND b1.is_delete=0", nativeQuery = true)
+    @Query(value = "SELECT b1.* FROM boards b1 WHERE b1.author_id=? OR b1.guess_id=? AND b1.is_delete=0", nativeQuery = true)
     List<Board> getAllUserBoards(Long userId);
 
     @Modifying

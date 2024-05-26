@@ -16,7 +16,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/board")
+@RequestMapping("/api/boards")
 @CrossOrigin(origins = "*")
 public class TasksController {
   /*
@@ -32,7 +32,7 @@ public class TasksController {
 //        return ResponseEntity.ok(tasksService.getAllTask());
 //    }
 
-    @GetMapping("/{boardId}/list/{listId}/tasks")
+    @GetMapping("/{boardId}/columns/{listId}/tasks")
     public ResponseEntity<Task> getTask(@PathVariable Long boardId, @PathVariable Long listId) {
         Task tasks = tasksService.findTaskByListId(listId);
         if (tasks == null) {
@@ -42,12 +42,12 @@ public class TasksController {
         }   
     } 
 
-    @PostMapping("/:boardId/task_list/:taskListId/tasks")
+    @PostMapping("/:boardId/columns/:taskListId/tasks")
     public ResponseEntity<Task> createTask(@RequestBody TasksDto task, @PathVariable Long boardId, @PathVariable Long taskListId) {
         return new ResponseEntity<Task>(tasksService.createNewTask(task, boardId, taskListId),HttpStatus.CREATED);
     } 
 
-    @PutMapping("/{boardId}/list/{listId}/tasks/{id}")
+    @PutMapping("/{boardId}/columns/{listId}/tasks/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @PathVariable Long listId, @PathVariable Long boardId, @RequestBody TasksDto task) {
         if (tasksService.checkAuthor(id)){
             return new ResponseEntity<Task>(tasksService.updateTask(task, boardId, listId, id), HttpStatus.OK);
@@ -56,7 +56,7 @@ public class TasksController {
             return null;
         }
     } 
-    @DeleteMapping("/{boardId}/list/{listId}/tasks/{id}")
+    @DeleteMapping("/{boardId}/columns/{listId}/tasks/{id}")
     public ResponseEntity<Boolean> deleteTask(@PathVariable Long id, @PathVariable Long listId, @PathVariable Long boardId) {
         if (tasksService.checkAuthor(boardId)){
             tasksService.deleteTask(boardId, listId, id);
