@@ -28,7 +28,7 @@ public class WebSocketController {
     @Autowired
     private TasksRepository tasksRepository;
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 1000)
     @MessageMapping("/tasks")
     public void SendNotify() {
         LocalDateTime now = LocalDateTime.now();
@@ -38,9 +38,6 @@ public class WebSocketController {
         Task tasks = tasksRepository.findByTargetDate(formattedDateTime);
         if (tasks != null) {
             String message = tasks.getName() + " has time out!";
-            messagingTemplate.convertAndSend("/topic/tasks", message);
-        } else {
-            String message = "Test notification";
             messagingTemplate.convertAndSend("/topic/tasks", message);
         }
     }
