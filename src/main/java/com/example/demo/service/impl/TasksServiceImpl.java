@@ -39,7 +39,7 @@ public class TasksServiceImpl implements TasksService {
 		Board board = boardRepository.findById(boardId).orElseThrow(() ->
 				new UsernameNotFoundException("not found  "));
 		Long board_id = board.getId();
-		TaskList taskList = taskListRepository.findTaskListByBoard_Id(board_id);
+		TaskList taskList = taskListRepository.findById(taskListId).orElseThrow();
 		Task tasks = new Task();
 		tasks.setName(tasksDto.getName());
 		tasks.setCompleted(tasksDto.getCompleted());
@@ -79,7 +79,7 @@ public class TasksServiceImpl implements TasksService {
 		Board board = boardRepository.findById(boardId).orElseThrow(() ->
 				new UsernameNotFoundException("not found  "));
 		Long board_id = board.getId();
-		TaskList taskList = taskListRepository.findTaskListByBoard_Id(board_id);
+		TaskList taskList = taskListRepository.findById(taskListId).orElseThrow();
 		Task tasks = taskRepository.findTaskByTaskList_Id(taskListId);
 		tasks.setName(tasksDto.getName());
 		tasks.setCompleted(tasksDto.getCompleted());

@@ -15,8 +15,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 public class TaskList {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) 
@@ -24,6 +22,7 @@ public class TaskList {
 
 	private String name;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "taskList", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	Set<Task> tasks;
 

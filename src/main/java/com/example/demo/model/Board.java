@@ -12,7 +12,6 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class Board {
 
@@ -26,6 +25,7 @@ public class Board {
     @JsonIgnore
     private int is_delete;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     Set<TaskList> tasksList;
 

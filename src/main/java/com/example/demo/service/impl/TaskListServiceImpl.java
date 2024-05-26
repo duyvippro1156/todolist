@@ -14,6 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TaskListServiceImpl implements TaskListService {
 
@@ -27,9 +29,8 @@ public class TaskListServiceImpl implements TaskListService {
     private UserRepository userRepository;
 
     @Override
-    public TaskList getTaskListById(Long id) {
-        return taskListRepository.findById(id).orElseThrow(() ->
-                new UsernameNotFoundException("not found"));
+    public List<TaskList> getTaskListByBoardId(Long boardId) {
+        return taskListRepository.findTaskListByBoard_Id(boardId);
     }
 
     @Override

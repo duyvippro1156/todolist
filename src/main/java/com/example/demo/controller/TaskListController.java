@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/boards")
 @CrossOrigin(origins = "*")
@@ -16,6 +18,11 @@ public class TaskListController {
 
     @Autowired
     private TaskListService taskListService;
+
+    @GetMapping("/{boardId}/columns")
+    public ResponseEntity<List<TaskList>> getTaskList(@PathVariable Long boardId){
+        return new ResponseEntity<List<TaskList>>(taskListService.getTaskListByBoardId(boardId), HttpStatus.OK);
+    }
 
     @PostMapping("/{boardId}/columns")
     public ResponseEntity<TaskList> createTaskList(@RequestBody TaskListDto taskListDto, @PathVariable Long boardId){
@@ -27,7 +34,7 @@ public class TaskListController {
         if (taskListService.checkAuthor(boardId)){
             return new ResponseEntity<TaskList>(taskListService.editTaskListWithId(taskListDto,boardId,listId), HttpStatus.OK);
         }else {
-            return new ResponseEntity<TaskList>(taskListService.getTaskListById(listId), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
